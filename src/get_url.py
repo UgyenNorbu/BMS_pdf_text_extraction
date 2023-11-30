@@ -22,7 +22,7 @@ for tr_element in tr_elements:
 url_master_list = [[url] for url in url_list]
 
 # Specify the CSV file path
-csv_file_path = 'output/url_list.csv'
+csv_file_path = 'data/url_list.csv'
 
 # Write the list to the CSV file
 with open(csv_file_path, 'w', newline='') as csv_file:
