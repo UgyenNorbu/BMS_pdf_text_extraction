@@ -1,9 +1,10 @@
-import requests
-import pandas
 from bs4 import BeautifulSoup
+import pandas
+import requests
+import time
 
-# login_url = 'http://202.144.157.83/bms/public/p'
-LOGIN_URL = "http://192.168.20.83/bms/public/p"
+LOGIN_URL = 'http://202.144.157.83/bms/public/p'
+# LOGIN_URL = "http://192.168.20.83/bms/public/p"
 
 username = 'unorbu@moit.gov.bt'
 password = 'abcd1234'
@@ -15,12 +16,12 @@ login_payload = {
 }
 login_response = session.post(LOGIN_URL, data=login_payload)
 
-
 def scrap_table(session_input, url):
     target_page_response = session_input.get(url)
     soup = BeautifulSoup(target_page_response.text, 'html.parser')
 
     table = soup.find('table', class_='table table-bordered table-striped table-hover')
+
     rows = []
     for row in table.find_all('tr'):
         row_data = [cell.text for cell in row.find_all(['td', 'th'])]
@@ -43,17 +44,27 @@ def scrap_table(session_input, url):
     text_spl = text.split(':')
     df.iloc[38, 0]  = text_spl[0].strip()
     df.iloc[38, 1] = text_spl[1].strip()
+    df.iloc[7,0] = df.iloc[7,0].strip()
 
-    # print("AFTER UPDATING CELL 0th COL")
-    # print(df.tail(10))
     return df
 
+# my_df = scrap_table(session, "http://202.144.157.83/bms/public/brinv/bridgedata/2")
+# print(my_df)
 
-# target_url = 'http://202.144.157.83/bms/public/brinv/bridgedata/112'
-# target_url = "http://202.144.157.83/bms/public/brinv/bridgedata/120"
-TARGET_URL = "http://192.168.20.83/bms/public/brinv/bridgedata/112"
+# Read URL from CSV file and export excel with unique names
+data = pandas.read_csv("data/url_list.csv", header=None)
+# print(data.iloc[0][0])
 
-output_df = scrap_table(session, TARGET_URL)
-excel_filename = 'output/2.xlsx'
-output_df.to_excel(excel_filename, index=False, header=None)
+def export_data(n, input_df):
+    data_select = input_df.iloc[n][0]
+    TARGET_URL = "http://202.144.157.83" + data_select
+    file_name = "output/BMS_" + str(data_select.split("bridgedata/")[1]).strip() + ".xlsx"
+    output_df = scrap_table(session, TARGET_URL)
+    time.sleep(5)
+    output_df.to_excel(file_name, index=False, header=None)
+    print(n)
+    print("DONE...")
 
+for i in range(25, 35):
+    export_data(i, data)
+    time.sleep(1)
