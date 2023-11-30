@@ -57,4 +57,3 @@ output_df = scrap_table(session, TARGET_URL)
 excel_filename = 'output/2.xlsx'
 output_df.to_excel(excel_filename, index=False, header=None)
 
-
