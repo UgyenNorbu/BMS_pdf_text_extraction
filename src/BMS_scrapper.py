@@ -28,13 +28,9 @@ def scrap_table(session_input, url):
         rows.append(row_data)
 
     df = pandas.DataFrame(rows)
-    # print("ORIGINAL")
-    # print(df.head())
 
     df = df.drop([0, 2, 4])
     df = df.drop(df.columns[4], axis=1)
-    # print("AFTER ROW DROPPING")
-    # print(df.head())
 
     df.iat[1, 0] = df.iat[0, 2]
     df.iat[1, 1] = df.iat[0, 3]
@@ -48,12 +44,8 @@ def scrap_table(session_input, url):
 
     return df
 
-# my_df = scrap_table(session, "http://202.144.157.83/bms/public/brinv/bridgedata/2")
-# print(my_df)
-
 # Read URL from CSV file and export excel with unique names
 data = pandas.read_csv("data/url_list.csv", header=None)
-# print(data.iloc[0][0])
 
 def export_data(n, input_df):
     data_select = input_df.iloc[n][0]
