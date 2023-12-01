@@ -65,6 +65,6 @@ def export_data(n, input_df):
     print(n)
     print("DONE...")
 
-for i in range(25, 35):
+for i in range(105, 116):
     export_data(i, data)
     time.sleep(1)
